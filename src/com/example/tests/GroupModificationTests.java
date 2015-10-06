@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 import com.example.utils.SortedListOf;
 
 public class GroupModificationTests extends TestBase {
-	 @Test(dataProvider="randomValidGroupGenerator")
+	 @Test(dataProvider="groupsFromXmlFile")
 public void modifySomeGroup(GroupData group) {
 		 //save old state
 		 SortedListOf<GroupData>oldList=app.getGroupHelper().getGroups();

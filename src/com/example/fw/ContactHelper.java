@@ -17,11 +17,8 @@ public class ContactHelper extends HelperBase {
 		super(manager);
 	}
 	private SortedListOf<ContactData>cachedContacts;
-	//private List<ContactData>cachedContacts;
-	//private ListOf<ContactData>cachedContacts;
+	
 	public SortedListOf<ContactData> getContacts() {
-	//public ListOf<ContactData> getContacts() {
-	//public List<ContactData> getContacts() {
 		if (cachedContacts==null) {
 			rebuildCache();
 		}
@@ -29,9 +26,7 @@ public class ContactHelper extends HelperBase {
 		}
 		
 	private void rebuildCache() {
-      // cachedContacts=new ArrayList<ContactData>();	
 	cachedContacts=new SortedListOf<ContactData>();
-        //cachedContacts=new ListOf<ContactData>();
 		List<WebElement> rows = findElements();
 		for (WebElement row : rows) {
 			List<WebElement>columns =row.findElements(By.tagName("td"));
@@ -41,7 +36,6 @@ public class ContactHelper extends HelperBase {
 			String email=columns.get(3).getText();
 			String home_tel=columns.get(4).getText();
 			String id=columns.get(0).findElement(By.xpath(".//input[@value]")).getAttribute("value");
-			//System.out.println(id);
 	cachedContacts.add(new ContactData().withFirstname(first_name_title).withLastname(last_name_title).withEmail(email).withHomeTel(home_tel).withId(id));
 
 		}
@@ -49,7 +43,8 @@ public class ContactHelper extends HelperBase {
 
 	public ContactHelper createContact(ContactData contact) {
 		initContactCreation();
-		fillContactCreationForm(contact,CREATION);	
+		randomGroupSelection();
+		fillContactForm(contact,CREATION);
 		submitContactCreation();
 	    manager.navigateTo().mainPage();
 	    rebuildCache();
@@ -59,18 +54,29 @@ public class ContactHelper extends HelperBase {
 	public ContactHelper modifyContact(int index, ContactData contact) {
 		manager.navigateTo().mainPage();
 		selectContact(index);
-		fillContactCreationForm(contact,MODIFICATION);
+		fillContactForm(contact,MODIFICATION);
 	    submitContactModification();
 		manager.navigateTo().mainPage();
 		rebuildCache();
+		return this;
+	}
+	public ContactHelper modifyContactGroup(int index, ContactData contact) {
+		manager.navigateTo().mainPage();
 		checkContact(index);
 	    randomGroupSelection();
 		submitGroupChange();
 		manager.navigateTo().goToSubmittedGroupPage();
 		manager.navigateTo().mainPage();
+		resetGroupsListToAllValue();
+		return this;	
 		
-	return this;
-}
+	}
+
+	public void resetGroupsListToAllValue() {
+		 click(By.xpath("//select[@onchange='this.parentNode.submit()']/option[@value=''] "));	
+		
+	}
+
 	public ContactHelper deleteContact(int index) {
 		selectContact(index);
 		deleteContact();
@@ -92,10 +98,7 @@ public class ContactHelper extends HelperBase {
 		return this;	
 	}
 	
-	public ContactHelper fillContactCreationForm(ContactData contact,boolean formType) {
-		//if (driver.findElements(By.name("submit")).size()>0) {
-		//formType=CREATION;	
-		//}
+	public ContactHelper fillContactForm(ContactData contact,boolean formType) {
 		if(formType==CREATION)
 		{
 		selectByText(By.name("new_group"),contact.getGroup_name());	
@@ -119,7 +122,6 @@ public class ContactHelper extends HelperBase {
 	
 	public ContactHelper submitContactCreation() {
 		driver.findElement(By.name("submit")).click();
-		cachedContacts=null;
 		return this;
 	}
 
@@ -131,7 +133,6 @@ public class ContactHelper extends HelperBase {
 
 	public ContactHelper deleteContact() {
 	click(By.xpath("//input[@value='Delete']"));
-	cachedContacts=null;
 	return this;
 	}
 	public ContactHelper checkContact(int index) {
@@ -140,7 +141,6 @@ public class ContactHelper extends HelperBase {
 		}
 	  public ContactHelper submitContactModification() {
 		  click(By.xpath("//input[@value='Update']"));
-		  cachedContacts=null;
 		  return this;
 	}
 

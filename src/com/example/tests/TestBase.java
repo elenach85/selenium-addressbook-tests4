@@ -2,7 +2,9 @@ package com.example.tests;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -16,8 +18,13 @@ import org.testng.annotations.DataProvider;
 
 import com.example.fw.ApplicationManager;
 import static com.example.tests.GroupDataGenerator.generateRandomGroups;
+import static com.example.tests.GroupDataGenerator.loadGroupsFromCsvFile;
+import static com.example.tests.GroupDataGenerator.loadGroupsFromXmlFile;
+import static com.example.tests.ContactDataGenerator.generateRandomContacts;
+import static com.example.tests.ContactDataGenerator.loadContactsFromCsvFile;
+import static com.example.tests.ContactDataGenerator.loadContactsFromXmlFile;
+
 import com.thoughtworks.selenium.webdriven.commands.GetText;
-import java.util.Calendar;
 public class TestBase {
 	protected static ApplicationManager app;
 	
@@ -48,6 +55,27 @@ public class TestBase {
 		list.add(new Object[]{group});
 		}
 		return list;
+	}
+
+	@DataProvider 
+	public Iterator<Object[]> contactsFromXmlFile() throws IOException{
+	return wrapContactsForDataProvider(loadContactsFromXmlFile(new File("contacts.xml"))).iterator();
+		
+	}
+	
+	@DataProvider 
+	public Iterator<Object[]> contactsFromCsvFile() throws IOException{
+	return wrapContactsForDataProvider(loadContactsFromCsvFile(new File("contacts.txt"))).iterator();
+		
+	}
+	
+	@DataProvider
+	public Iterator<Object[]> groupsFromCsvFile() throws IOException{
+	return wrapGroupsForDataProvider(loadGroupsFromCsvFile(new File("groups.txt"))).iterator();
+	}
+	@DataProvider
+	public Iterator<Object[]> groupsFromXmlFile() throws IOException{
+	return wrapGroupsForDataProvider(loadGroupsFromXmlFile(new File("groups.xml"))).iterator();
 	}
 
 	public String generateRandomYear() {
@@ -102,50 +130,18 @@ return day;
 	}		
 		}
 	 
-	@DataProvider
-	public Iterator<Object[]> randomValidContactGeneratorWithGroupName() {
-app.navigateTo().mainPage();
-app.getContactHelper().initContactCreation();
-app.getContactHelper().getGroupsNameList();
-	List<Object[]>contactList=new ArrayList<Object[]>();
-		for (int i = 0; i <1; i++) {
-			ContactData contact=new ContactData()
-		.withFirstname(generateRandomString())
-		.withLastname(generateRandomString())
-		.withEmail(generateRandomString())
-		.withEmail2(generateRandomString())
-		.withHomeTel(generateRandomString())
-		.withAddress1(generateRandomString())
-		.withPhone2(generateRandomString())
-		.withWorktel(generateRandomString())
-		.withBirthYear(generateRandomYear())
-		.withBirthMonth(generateRandomMonth())
-		.withBirthDay(generateRandomDay())
-		.withGroupName(app.getContactHelper().randomGroupSelection());
-	contactList.add(new Object[]{contact});
-	}
-	return contactList.iterator();
-	}
 
 	@DataProvider
 	public Iterator<Object[]> randomValidContactGeneratorWithoutGroupName() {
-	List<Object[]>contactList=new ArrayList<Object[]>();
-		for (int i = 0; i <1; i++) {
-			ContactData contact=new ContactData()
-		.withFirstname(generateRandomString())
-		.withLastname(generateRandomString())
-		.withEmail(generateRandomString())
-		.withEmail2(generateRandomString())
-		.withHomeTel(generateRandomString())
-		.withAddress1(generateRandomString())
-		.withPhone2(generateRandomString())
-		.withWorktel(generateRandomString())
-		.withBirthYear(generateRandomYear())
-		.withBirthMonth(generateRandomMonth())
-		.withBirthDay(generateRandomDay());
-	contactList.add(new Object[]{contact});
+		return wrapContactsForDataProvider(generateRandomContacts(3)).iterator();
 	}
-	return contactList.iterator();
+
+	public static List<Object[]> wrapContactsForDataProvider(List<ContactData> contacts) {
+		List<Object[]>contactList=new ArrayList<Object[]>();
+		for (ContactData contact : contacts) {
+			contactList.add(new Object[]{contact});	
+		}
+		return contactList;
 	}
 
 	public  String generateRandomString(){
@@ -157,5 +153,31 @@ app.getContactHelper().getGroupsNameList();
 			}	
 	
 }
+	@DataProvider
+	public Iterator<Object[]> randomValidContactGeneratorWithGroupName() {
+app.navigateTo().mainPage();
+app.getContactHelper().initContactCreation();
+app.getContactHelper().getGroupsNameList();
+	List<Object[]>contactList=new ArrayList<Object[]>();
+		for (int i = 0; i <1; i++) {
+			ContactData contact=new ContactData()
+					.withFirstname(generateRandomString())
+					.withLastname(generateRandomString())
+					.withAddress1(generateRandomString())
+					.withHomeTel(generateRandomString())
+					.withMobile_Tel(generateRandomString())
+					.withWorktel(generateRandomString())
+					.withEmail(generateRandomString())
+					.withBirthDay(generateRandomDay())
+					.withBirthYear(generateRandomYear())
+					.withBirthMonth(generateRandomMonth())
+					.withEmail2(generateRandomString())
+					.withPhone2(generateRandomDay());
+		//.withGroupName(app.getContactHelper().randomGroupSelection());
+	contactList.add(new Object[]{contact});
+	}
+	return contactList.iterator();
+	}
+
 }
 	

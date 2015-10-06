@@ -15,8 +15,8 @@ import org.testng.annotations.DataProvider;
 import  org.testng.annotations.Test;
 import static com.example.tests.TestBase.wrapGroupsForDataProvider;
 import static com.example.tests.GroupDataGenerator.generateRandomGroups;
-import static com.example.tests.GroupDataGenerator.loadGroupsFromCsvFile;
 import static com.example.tests.GroupDataGenerator.loadGroupsFromXmlFile;
+import static com.example.tests.GroupDataGenerator.loadGroupsFromCsvFile;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matcher.*;
 import com.example.utils.ListOf;
@@ -24,14 +24,8 @@ import com.example.utils.SortedListOf;
 import com.google.common.collect.Lists;
 public class GroupCreationTests extends TestBase {
 	
-	@DataProvider
-	public Iterator<Object[]> groupsFromFile() throws IOException{
-	return wrapGroupsForDataProvider(loadGroupsFromXmlFile(new File("groups.xml"))).iterator();
-	}
 	
-
-
-@Test(dataProvider="groupsFromFile")
+@Test(dataProvider="groupsFromCsvFile")
   public void testGroupCreationWithValidData(GroupData group) throws Exception {
 
     // save old state

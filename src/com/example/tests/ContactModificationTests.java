@@ -17,7 +17,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matcher.*;
 public class ContactModificationTests extends TestBase{
 	
-@Test(dataProvider="randomValidContactGeneratorWithoutGroupName")
+@Test(dataProvider="contactsFromCsvFile")
+//@Test(dataProvider="randomValidContactGeneratorWithoutGroupName")	
 	public void ModifySomeContactAllFields(ContactData contact) {
 		//save old list
 	app.navigateTo().mainPage();	
@@ -26,17 +27,15 @@ public class ContactModificationTests extends TestBase{
 			int index=rnd.nextInt(oldContactList.size()-1);
 			//actions
 			contact.setId(oldContactList.get(index).getId());
-			app.getContactHelper().modifyContact(index,contact);
+			app.getContactHelper().modifyContact(index,contact)
+		.modifyContactGroup(index, contact);
 		 //save new list
 			SortedListOf<ContactData>newContactList=app.getContactHelper().getContacts();
 			//compare
-			System.out.println("oldContactList:"+ oldContactList);
-			System.out.println("newContactList:"+ newContactList);
-			System.out.println("oldContactList.without(index):"+oldContactList.without(index));
-			System.out.println("oldContactList.without(index).withAdded(contact):"+ oldContactList.without(index).withAdded(contact));
 			assertThat(newContactList, equalTo(oldContactList.without(index).withAdded(contact)));
 			
 	}
+
 
 }
 
