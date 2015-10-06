@@ -26,9 +26,6 @@ public class ContactRemovalTests extends TestBase{
 		 //save new list
 		 SortedListOf<ContactData>newContactList=app.getContactHelper().getContacts();
 		  //compare
-		 System.out.println("oldConactList:"+ oldContactList);
-		 System.out.println("oldContactList.without(index):"+ oldContactList.without(index));
-		 System.out.println("newContactList:"+ newContactList);
 			assertThat(newContactList, equalTo(oldContactList.without(index)));
 		 
 		
