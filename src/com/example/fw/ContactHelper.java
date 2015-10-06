@@ -41,14 +41,14 @@ public class ContactHelper extends HelperBase {
 		}
 		}
 
-	public ContactHelper createContact(ContactData contact) {
+	public void createContact(ContactData contact) {
 		initContactCreation();
 		randomGroupSelection();
 		fillContactForm(contact,CREATION);
 		submitContactCreation();
 	    manager.navigateTo().mainPage();
 	    rebuildCache();
-		return this;	
+		
 	}
 
 	public ContactHelper modifyContact(int index, ContactData contact) {
@@ -60,7 +60,7 @@ public class ContactHelper extends HelperBase {
 		rebuildCache();
 		return this;
 	}
-	public ContactHelper modifyContactGroup(int index, ContactData contact) {
+	public void modifyContactGroup(int index, ContactData contact) {
 		manager.navigateTo().mainPage();
 		checkContact(index);
 	    randomGroupSelection();
@@ -68,37 +68,33 @@ public class ContactHelper extends HelperBase {
 		manager.navigateTo().goToSubmittedGroupPage();
 		manager.navigateTo().mainPage();
 		resetGroupsListToAllValue();
-		return this;	
 		
 	}
-
-	public void resetGroupsListToAllValue() {
-		 click(By.xpath("//select[@onchange='this.parentNode.submit()']/option[@value=''] "));	
-		
-	}
-
-	public ContactHelper deleteContact(int index) {
+	public void deleteContact(int index) {
 		selectContact(index);
 		deleteContact();
 		manager.navigateTo().mainPage();
 		rebuildCache();
-	return this;	
+		
 	}
+	
+
+	
 	
 	
 //-------------------------------------------------------------------------------------------------------------------------	
 	
 	
 	
-	public ContactHelper initContactCreation() {
+	public void initContactCreation() {
 		if (!manager.navigationHelper.onCreateContactPage()){
 			driver.findElement(By.linkText("add new")).click();
 			
 		}
-		return this;	
+	
 	}
 	
-	public ContactHelper fillContactForm(ContactData contact,boolean formType) {
+	public void fillContactForm(ContactData contact,boolean formType) {
 		if(formType==CREATION)
 		{
 		selectByText(By.name("new_group"),contact.getGroup_name());	
@@ -117,36 +113,35 @@ public class ContactHelper extends HelperBase {
 	    type(By.name("address2"),contact.getAddress_2());
 	    type(By.name("phone2"),contact.getPhone_2());
 	
-	    return this;
+	  
 	}
 	
-	public ContactHelper submitContactCreation() {
+	public void submitContactCreation() {
 		driver.findElement(By.name("submit")).click();
-		return this;
+	
 	}
 
 	
-	public ContactHelper selectContact(int index) {
+	public void selectContact(int index) {
 	click(By.xpath("//tr[@name='entry'][" + (index+1) + "]/td/a/img[@title='Edit']"));
-	return this;
+
 	}
 
-	public ContactHelper deleteContact() {
+	public void deleteContact() {
 	click(By.xpath("//input[@value='Delete']"));
-	return this;
+	
 	}
-	public ContactHelper checkContact(int index) {
+	public void checkContact(int index) {
 	    click(By.xpath("(//input[@type='checkbox'])[" + (index+1) + "]"));
-	    return this;	
+	 
 		}
-	  public ContactHelper submitContactModification() {
+	  public void submitContactModification() {
 		  click(By.xpath("//input[@value='Update']"));
-		  return this;
 	}
 
-	public ContactHelper submitGroupChange() {
+	public void submitGroupChange() {
 	click(By.xpath("//input[@name='add']"));
-	return this;	
+		
 	}
 
 	private List<WebElement> findElements() {
@@ -180,15 +175,14 @@ public class ContactHelper extends HelperBase {
 		 return groupName;
 	}
 	
-	public ContactHelper selectGroupForContactCreation(int index2) {
+	public void selectGroupForContactCreation(int index2) {
 		
 	     click(By.xpath("(//select[@name='new_group']/option)[" + (index2+1) + "]"));
-	     return this;			  
+	  			  
 		}
 	
-	public ContactHelper selectGroupForChange(int index2) {
-	      click(By.xpath("(//select[@name='to_group']/option)[" + (index2+1) + "]"));
-	      return this;			  
+	public void selectGroupForChange(int index2) {
+	      click(By.xpath("(//select[@name='to_group']/option)[" + (index2+1) + "]"));		  
 		}
 			  
 			  
@@ -196,7 +190,10 @@ public class ContactHelper extends HelperBase {
 	WebElement id = driver.findElement(By.xpath("(//input[@id])[index+1]"));
 	return id;
 	}	
+	public void resetGroupsListToAllValue() {
+		 click(By.xpath("//select[@onchange='this.parentNode.submit()']/option[@value=''] "));	
 		
+	}	
 
 }
 

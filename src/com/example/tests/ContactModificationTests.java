@@ -21,7 +21,8 @@ public class ContactModificationTests extends TestBase{
 //@Test(dataProvider="randomValidContactGeneratorWithoutGroupName")	
 	public void ModifySomeContactAllFields(ContactData contact) {
 		//save old list
-	app.navigateTo().mainPage();	
+	app.navigateTo().mainPage();
+	
 	        SortedListOf<ContactData>oldContactList=app.getContactHelper().getContacts();
 			 Random rnd=new Random();
 			int index=rnd.nextInt(oldContactList.size()-1);
